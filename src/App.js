@@ -1,23 +1,30 @@
-import logo from './logo.svg';
-import './App.css';
+import { useState } from 'react';
+import Timer from './components/Timer';
+import Button from './components/Button';
 
 function App() {
+  const [lastClickTime, setLastClickTime] = useState(null);
+  const [interval, setInterval] = useState(null);
+
+  function handleClick() {
+    const now = Date.now();
+    if (lastClickTime) {
+      setInterval(now - lastClickTime);
+    }
+    setLastClickTime(now);
+  }
+
+  function handleReset() {
+    setLastClickTime(null);
+    setInterval(null);
+  }
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <Button onClick={handleClick}>Click me</Button>
+      <Button onClick={handleReset}>Reset</Button>
+      {lastClickTime && <Timer startTime={lastClickTime} />}
+      {interval && <p>Interval: {interval} ms</p>}
     </div>
   );
 }
